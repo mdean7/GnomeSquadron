@@ -6,30 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gnome Squadron</title>
 <link href='http://fonts.googleapis.com/css?family=VT323' rel='stylesheet' />
-
+<link rel="stylesheet" type="text/css" href="bg.css" />
 <style>
 
-body {
-  padding:0;
-  margin:0;
-  background:rgb(0, 0, 0);
-}
 
-html, body {
-      width: 100%;
-      height: 100%;
-      margin: 0px;
-      border: 0;
-      overflow: hidden; /*  Disable scrollbars */
-      display: block;  /* No floating content on sides */
-    }
-
-canvas {
-  display:block;
-  margin:30px auto 0;
-  left: 0;
-  top: 0;
-}
 
 </style>
 
@@ -40,9 +20,18 @@ var canvas,
     ctx,
     width =1080,
     height = 685,
+    invincibility,
+    themeSound,
     magicSound,
     hitSound,
+    continueSound,
+    gameoverSound,
+    ramSound,
+    ouchSound,
+    gnomehurtSound,
     boom,
+    burst,
+    gnomesplosion,
     enemyTotal = 5,
     enemies = [],
     enemy_x = 1200,
@@ -75,7 +64,7 @@ var canvas,
     magics = [],
     score = 0,
     alive = true,
-    lives = 1,
+    lives = 3,
     cavemap,
     caveX = 0, caveY = 0, caveY2 = 0, caveX2 = -5220,
     gameStarted = false;
@@ -184,7 +173,9 @@ function drawmagic() {
   if (magics.length)
     for (var i = 0; i < magics.length; i++) {
      ctx.fillStyle = '#g00';
-     ctx.drawImage(magic, magics[i][0], magics[i][1]+40);   
+     ctx.drawImage(magic, magics[i][0]+60, magics[i][1]+50);
+     ctx.drawImage(burst, gnome_x+100, gnome_y+10);
+    
    }
 }
 
@@ -193,7 +184,8 @@ function movemagic() {
  for (var i = 0; i < magics.length; i++) {
    if (magics[i][0] > 0) {
       magics[i][0] += 40;
-    } else if (magics[i][0] > 1305) {
+    } 
+    if (magics[i][0] > 905) {
      magics.splice(i, 1);
    }
  }
@@ -207,7 +199,7 @@ function hitTest() {
      if (magics[i][0] >= (enemies[j][0]) && magics[i][1] >= enemies[j][1] - 3*enemies[j][3] && magics[i][1] <= (enemies[j][1] + 4*enemies[j][3])) {
         hitSound.play();
         // ctx.fillRect( (enemies[j][0]), (enemies[j][1])  + 10,50,50);
-        ctx.drawImage(boom, (enemies[j][0]), (enemies[j][1])  + 10,100,100);
+        ctx.drawImage(boom, (enemies[j][0]), (enemies[j][1])  + 0,130,130);
 
         remove = true;
         enemies.splice(j, 1);
@@ -224,58 +216,80 @@ function hitTest() {
 
 //Similar to the magic hit test, this function checks to see if the player's gnome collides with any of the enemies or rocks
 function gnomeCollision() {
+  if(invincibility !== true){
   var gnome_xw = gnome_x + gnome_w,
       gnome_yh = gnome_y + gnome_h;
   for (var i = 0; i < enemies.length; i++) {
    if (gnome_xw > enemies[i][0] && gnome_x < enemies[i][0] + enemy_w && gnome_yh > enemies[i][1] && gnome_y < enemies[i][1] + enemy_h) {
+    //  ouchSound.play();
      checkLives();
     }
     if (gnome_xw < enemies[i][0] + enemy_w && gnome_xw > enemies[i][0] && gnome_y > enemies[i][1] && gnome_y < enemies[i][1] + enemy_h) {
+      // ouchSound.play();
      checkLives();
     }
     if (gnome_yh > enemies[i][1] && gnome_y < enemies[i][1] + enemy_h && gnome_x > enemies[i][0] && gnome_x < enemies[i][0] + enemy_w) {
+      // ouchSound.play();
      checkLives();
     }
     if (gnome_yh > enemies[i][1] && gnome_yh < enemies[i][1] + enemy_h && gnome_xw < enemies[i][0] + enemy_w && gnome_xw > enemies[i][0]) {
+      // ouchSound.play();
      checkLives();
     }
   }
    for (var i = 0; i<rocks.length; i++){
     if (gnome_x > rocks[i][0] && gnome_x < rocks[i][0] + rock_w && gnome_y > rocks[i][1] && gnome_y < rocks[i][1] + rock_h) {
-     checkLives();
+     ramSound.play();
+      checkLives();
     }
     if (gnome_xw < rocks[i][0] + rock_w && gnome_xw > rocks[i][0] && gnome_y > rocks[i][1] && gnome_y < rocks[i][1] + rock_h) {
-     checkLives();
+    ramSound.play();
+      checkLives();
     }
     if (gnome_yh > rocks[i][1] && gnome_yh < rocks[i][1] + rock_h && gnome_x > rocks[i][0] && gnome_x < rocks[i][0] + rock_w) {
-     checkLives();
+     ramSound.play();
+      checkLives();
     }
     if (gnome_yh > rocks[i][1] && gnome_yh < rocks[i][1] + rock_h && gnome_xw < rocks[i][0] + rock_w && gnome_xw > rocks[i][0]) {
-     checkLives();
+     ramSound.play();
+      checkLives();
     }
   }
   for (var i = 0; i<stalagtites.length; i++){
     if (gnome_x > stalagtites[i][0] && gnome_x < stalagtites[i][0] + stalagtite_w && gnome_y < stalagtites[i][1] && gnome_y < stalagtites[i][1] + stalagtite_h) {
-     checkLives();
+    ramSound.play();
+      checkLives();
     }
     if (gnome_xw < stalagtites[i][0] + stalagtite_w && gnome_xw > stalagtites[i][0] && gnome_y < stalagtites[i][1] && gnome_y < stalagtites[i][1] + stalagtite_h) {
-     checkLives();
+    ramSound.play();
+      checkLives();
     }
     if (gnome_y < stalagtites[i][1] + stalagtite_h && gnome_x > stalagtites[i][0] && gnome_x < stalagtites[i][0] + stalagtite_w) {
-     checkLives();
+    ramSound.play();
+      checkLives();
     }
     if (gnome_y < stalagtites[i][1] + stalagtite_h && gnome_xw < stalagtites[i][0] + stalagtite_w && gnome_xw > stalagtites[i][0]) {
-     checkLives();
+    ramSound.play();
+      checkLives();
     }
   }
+}
 }
 
 //This function runs whenever the player's gnome hits an enemy or rock and either subtracts a life or sets the alive variable to false if the player runs out of lives
 function checkLives() {
-  lives -= 1;
+  ctx.drawImage(gnomesplosion, gnome_x -30, gnome_y -60, 200, 200)
+  gnomehurtSound.play();
+   setTimeout(function(){
+     invincibility = false;
+    },100);
+    lives -= 1;
+    invincibility = true;
   if (lives > 0) {
     reset();
   } else if (lives === 0) {
+    themeSound.stop()
+    gameoverSound.play();
     alive = false;
   }
 }
@@ -283,11 +297,11 @@ function checkLives() {
 //This simply resets the gnome and enemies to their starting positions
 function reset() {
   var enemy_reset_y = 50;
-  gnome_x = 10, gnome_y = height/2, gnome_w = 50, gnome_h = 57;
   for (var i = 0; i < enemies.length; i++) {
    enemies[i][0] = 1920;
    enemies[i][1] = enemy_reset_y;
    enemy_reset_y = enemy_reset_y + enemy_w + 60;
+
  }
 
 }
@@ -296,11 +310,14 @@ function reset() {
 function continueButton(e) {
  var cursorPos = getCursorPos(e);
  if (cursorPos.x > (width / 2) - 53 && cursorPos.x < (width / 2) + 47 && cursorPos.y > (height / 2) + 10 && cursorPos.y < (height / 2) + 50) {
-   alive = true;
-    lives = 1;
+  continueSound.play();  
+  alive = true;
+    lives = 3;
     score = 0;
+    gnome_x = 10, gnome_y = height/2, gnome_w = 50, gnome_h = 57;
     reset();
     canvas.removeEventListener('click', continueButton, false);
+    themeSound.play()
   }
 }
 
@@ -374,19 +391,30 @@ function init() {
   enemy = new Image();
   enemy.src = 'ghost2.gif';
   gnome = new Image();
-  gnome.src = 'gnome.png';
+  gnome.src = 'supergnome.png';
   cavemap = new Image();
   cavemap.src = 'cavebackground.png';
   magic = new Image();
   magic.src = 'magic.png';
   rock = new Image();
-  rock.src = 'rocks.png'
+  rock.src = 'rocks.png';
   stalagtite = new Image();
   stalagtite.src = 'stalagtites.png';
   boom = new Image();
-  boom.src = 'purplesmoke.png'
+  boom.src = 'purplesmoke.png';
+  burst = new Image();
+  burst.src = 'burst.png';
+  gnomesplosion = new Image();
+  gnomesplosion.src = 'gnomehit.png'
   magicSound = new sound('magic.mp3');
-  hitSound = new sound('hit.mp3')
+  hitSound = new sound('hit.mp3');
+  continueSound = new sound('continue.mp3');
+  gameoverSound = new sound('gameover.mp3');
+  ramSound = new sound('ram.wav');
+  ouchSound = new sound('ouch.wav');
+  gnomehurtSound = new sound('gnomehurt.wav');
+  themeSound = new sound('gametheme2.mp3');
+  invincibility=false;
   document.addEventListener('keydown', keyDown, false);
   document.addEventListener('keyup', keyUp, false);
   canvas.addEventListener('click', gameStart, false);
@@ -396,6 +424,7 @@ function init() {
 function gameStart() {
   gameStarted = true;
   canvas.removeEventListener('click', gameStart, false);
+  themeSound.play();
 }
 
 var last = new Date();
@@ -424,7 +453,8 @@ function gameLoop() {
 //Checks to see which key has been pressed and either to move the gnome or fire a magic
 function keyDown(e) {
   if (e.keyCode === 68) rightKey = true;
-  else if (e.keyCode === 65) leftKey = true;
+  else if (e.keyCode === 65) {leftKey = true;
+  gnome.src= 'supergnomeidle.png';}
   if (e.keyCode === 87) upKey = true;
   else if (e.keyCode === 83) downKey = true;
   if (e.keyCode === 32 && magics.length <= magicTotal){
@@ -436,7 +466,9 @@ function keyDown(e) {
 //Checks to see if a pressed key has been released and stops the gnomes movement if it has
 function keyUp(e) {
   if (e.keyCode === 68) rightKey = false;
-  else if (e.keyCode === 65) leftKey = false;
+  else if (e.keyCode === 65) {
+    gnome.src ='supergnome.png'
+  }
   if (e.keyCode === 87) upKey = false;
   else if (e.keyCode === 83) {downKey = false};
 }
@@ -463,7 +495,7 @@ window.onload = init;
 
 </head>
   <body >
-    <!-- <audio src="gametheme.mp3" controls autoplay loop></audio> -->
+    <!-- <audio className="audio-player" src="gametheme2.mp3" controls ></audio> -->
     <canvas id="canvas" width='1080' height='685'></canvas>
   </body>
 </html>
