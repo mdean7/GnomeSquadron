@@ -29,12 +29,22 @@ var canvas,
     ramSound,
     ouchSound,
     gnomehurtSound,
+    powerupSound,
+    bossSound,
     boom,
     burst,
     gnomesplosion,
-    powerup = false,
-    enemyTotal = 5,
+    poweredUp = false,
+    powerups = [],
+    powerupTotal = 10,
+    powerup_x = 1080,
+    powerup_y = 350,
+    powerup_w = 100,
+    powerup_h = 100,
+    powerupTotal = 1,
+    powerup,
     enemies = [],
+    enemyTotal = 6,
     enemy_x = 1200,
     enemy_y = 30,
     enemy_w = 50,
@@ -68,6 +78,8 @@ var canvas,
     lives = 3,
     cavemap,
     caveX = 0, caveY = 0, caveY2 = 0, caveX2 = -5220,
+    bossmap,
+    bossmapX = 5200, bossmapY = 50,
     gameStarted = false;
 
 //Arr for the enemies on screen spaced by height plus 60
@@ -93,7 +105,10 @@ for (var i = 0; i < stalagtiteTotal; i++) {
  if(i % 7 === 0){stalagtite_y += 90}
 }
 
-
+for (var i = 0; i < powerupTotal; i++) {
+ powerups.push([powerup_x, powerup_y, powerup_w, powerup_h, speed]);
+ powerup_x += powerup_w + 60;
+}
 //Clear the canvas to update it
 function clearCanvas() {
  ctx.clearRect(0,0,width,height);
@@ -176,7 +191,8 @@ function drawmagic() {
      ctx.fillStyle = '#g00';
      ctx.drawImage(magic, magics[i][0]+60, magics[i][1]+50);
      ctx.drawImage(burst, gnome_x+100, gnome_y+10);
-    if (score >= 50){ 
+     
+    if (poweredUp){ 
       ctx.drawImage(magic, magics[i][0]+60, magics[i][1]+100);
       ctx.drawImage(magic, magics[i][0]+60, magics[i][1]+0);
     }
@@ -189,18 +205,40 @@ function movemagic() {
    if (magics[i][0] > 0) {
       magics[i][0] += 40;
     } 
-    if (magics[i][0] > 905) {
+    if (magics[i][0] > 1080) {
      magics.splice(i, 1);
    }
  }
 }
+
+function drawpowerup() {
+  for (var i = 0; i < powerups.length; i++) {    
+    ctx.fillStyle = '#g00';
+    ctx.drawImage(powerup, (powerups[i][0] + powerups[i][2]), powerups[i][1], 100, 100);
+ }
+  
+}
+
+function movepowerup(){
+  for (let i = 0; i < powerups.length; i++) {  
+    if(score > 50) { 
+    if (powerups[i][0] > 0) {
+      powerups[i][0] -= 10;
+    } 
+   else if(powerups[i][0] <= 0){
+     powerups.push(powerup_x, powerup_y, powerup_w, powerup_h)
+      powerups.splice(i, 1);
+    }}
+  }
+}
+
 
 //Runs a couple of loops to see if any of the magics have hit any of the enemies
 function hitTest() {
  var remove = false;
  for (var i = 0; i < magics.length; i++) {
    for (var j = 0; j < enemies.length; j++) {
-     if (powerup !== true && magics[i][0] >= (enemies[j][0]) && magics[i][1] >= enemies[j][1] - 3*enemies[j][3] && magics[i][1] <= (enemies[j][1] + 4*enemies[j][3])) {
+     if (!poweredUp && magics[i][0] >= (enemies[j][0]) && magics[i][1] >= enemies[j][1] - 3*enemies[j][3] && magics[i][1] <= (enemies[j][1] + 4*enemies[j][3])) {
       
       hitSound.play();
         // ctx.fillRect( (enemies[j][0]), (enemies[j][1])  + 10,50,50);
@@ -211,7 +249,7 @@ function hitTest() {
         score += 10;
         enemies.push([1300, (Math.random()*400), enemy_w, enemy_h, speed]);
       }
-      if (powerup === true && magics[i][0] >= (enemies[j][0]) && magics[i][1] >= enemies[j][1] - 6*enemies[j][3] && magics[i][1] <= (enemies[j][1] + 8*enemies[j][3])) {
+      if ( poweredUp && magics[i][0] >= (enemies[j][0]) && magics[i][1] >= enemies[j][1] - 6*enemies[j][3] && magics[i][1] <= (enemies[j][1] + 8*enemies[j][3])) {
       
       hitSound.play();
         // ctx.fillRect( (enemies[j][0]), (enemies[j][1])  + 10,50,50);
@@ -287,6 +325,24 @@ function gnomeCollision() {
     if (gnome_y < stalagtites[i][1] + stalagtite_h && gnome_xw < stalagtites[i][0] + stalagtite_w && gnome_xw > stalagtites[i][0]) {
     ramSound.play();
       checkLives();
+    }
+  }
+  for (var i = 0; i < powerups.length; i++) {
+   if (gnome_xw > powerups[i][0] && gnome_x < powerups[i][0] + powerup_w && gnome_yh > powerups[i][1] && gnome_y < powerups[i][1] + powerup_h) {
+    powerupSound.play()
+     poweredUp=true;
+    }
+    if (gnome_xw < powerups[i][0] + powerup_w && gnome_xw > powerups[i][0] && gnome_y > powerups[i][1] && gnome_y < powerups[i][1] + powerup_h) {
+      powerupSound.play()
+     poweredUp=true;
+    }
+    if (gnome_yh > powerups[i][1] && gnome_y < powerups[i][1] + powerup_h && gnome_x > powerups[i][0] && gnome_x < powerups[i][0] + powerup_w) {
+      powerupSound.play()
+     poweredUp=true;
+    }
+    if (gnome_yh > powerups[i][1] && gnome_yh < powerups[i][1] + powerup_h && gnome_xw < powerups[i][0] + powerup_w && gnome_xw > powerups[i][0]) {
+      powerupSound.play()
+     poweredUp=true;
     }
   }
 }
@@ -368,14 +424,18 @@ function scoreTotal() {
   ctx.fillText(score, 82, 55);
   ctx.fillText('Lives:', 10, 30);
   ctx.fillText(lives, 82, 30);
-        if (!gameStarted) {
-          ctx.font = 'bold 100px VT323';
-          ctx.fillText('-^-GNOME SQUADRON-^-', width / 2 -400, height / 2);
-          ctx.font = 'bold 50px VT323';
-          ctx.fillText('-x Click to Play x-', width /  2 - 200 , height / 2 + 60);
-          ctx.fillText('Use  W A S D to move', width / 2 -200, height / 2 + 120);
-          ctx.fillText('Press spacebar to shoot', width / 2 -220, height / 2 + 180);
-          openingthemeSound.play();
+  if (!gameStarted) {
+    ctx.font = 'bold 100px VT323';
+    ctx.fillText('-^-GNOME SQUADRON-^-', width / 2 -400, height / 2);
+    ctx.font = 'bold 50px VT323';
+    ctx.fillText('-x Click to Play x-', width /  2 - 200 , height / 2 + 60);
+    ctx.fillText('Use  W A S D to move', width / 2 -200, height / 2 + 120);
+    ctx.fillText('Press spacebar to shoot', width / 2 -220, height / 2 + 180);
+   
+    // ctx.fillRect((width/2 -30) , (0), 150, 50);
+    // ctx.fillStyle = '#000';
+    // ctx.fillText('Mute', width/2, (40) );  
+  openingthemeSound.play();
   }
   if (!alive) {
     ctx.font = 'bold 30px VT323';
@@ -399,6 +459,15 @@ function drawcaveMap() {
   }
   caveX -= 8;
   caveX2 -= 8;
+}
+
+function drawbossMap() {
+  ctx.drawImage(bossmap, bossmapX, bossmapY, 600, 600);
+  if (bossmapX < 601) {
+    bossmapX += 0;
+  } else {
+    bossmapX -= 8;
+  }
 }
 
 //The initial function called when the page first loads. Loads the gnome, enemy and cavemap images and adds the event listeners for the arrow keys. It then calls the gameLoop function.
@@ -425,6 +494,8 @@ function init() {
   gnomesplosion.src = 'gnomehit.png';
   powerup = new Image();
   powerup.src = 'powerup.png';
+  bossmap = new Image();
+  bossmap.src = 'cthuluface.jpg';
   magicSound = new sound('magic.mp3');
   hitSound = new sound('hit.mp3');
   continueSound = new sound('continue.mp3');
@@ -433,7 +504,9 @@ function init() {
   ouchSound = new sound('ouch.wav');
   gnomehurtSound = new sound('gnomehurt.wav');
   themeSound = new sound('gametheme2.mp3');
-  openingthemeSound = new sound('openingtheme.mp3')
+  openingthemeSound = new sound('openingtheme.mp3');
+  powerupSound = new sound('powerupSound.wav');
+  bossSound = new sound('bossfight.mp3');
   invincibility=false;
   document.addEventListener('keydown', keyDown, false);
   document.addEventListener('keyup', keyUp, false);
@@ -455,17 +528,27 @@ function gameLoop() {
   var elapsedSeconds = (now - last) / 1000;
   last = now;
   clearCanvas();
-  drawcaveMap()
+  if (score < 1000) {
+    drawcaveMap()
+  } else {
+    themeSound.stop();
+    bossSound.play()
+    drawbossMap()
+  }
   if (alive && gameStarted && lives > 0) {
     hitTest();
     gnomeCollision();
     movemagic();
+    if(score < 1000) {
     moveEnemies();
     drawEnemies();
-    drawgnome();
-    drawmagic();
     drawRocks();
     moveRocks();
+  }
+    drawgnome();
+    drawmagic();
+    drawpowerup();
+    movepowerup();
   }
   scoreTotal();
   game = setTimeout(gameLoop, 1000 / 60);
@@ -499,6 +582,7 @@ function sound(src) {
     this.sound.src = src;
     this.sound.setAttribute("preload", "auto");
     this.sound.setAttribute("controls", "none");
+    this.sound.muted = false;
     this.sound.style.display = "none";
     document.body.appendChild(this.sound);
     this.play = function(){
@@ -507,16 +591,44 @@ function sound(src) {
     this.stop = function(){
         this.sound.pause();
     }    
-}
+  }
+
+
+// // Mute a singular HTML5 element
+// function muteMe(elem) {
+//     elem.muted = true;
+//     elem.pause();
+// }
+
+// // Try to mute all video and audio elements on the page
+// function mutePage() {
+//     document.querySelectorAll("audio").forEach( elem => muteMe(elem) );
+// }
 
 
 window.onload = init;
-
 </script>
 
 </head>
   <body >
-    <!-- <audio className="audio-player" src="gametheme2.mp3" controls ></audio> -->
+    <div class="buttontext">Mute/Unmute
+      <input id="stopButton" type="button" />
+    </div>
+    <script>      
+document.getElementById('stopButton').onclick = function() {
+  var sounds = document.getElementsByTagName('audio');
+  for(i=0; i<sounds.length; i++){
+if(sounds[i].muted === false){
+    sounds[i].muted = true;
+  } else {
+    sounds[i].muted =false;
+  }
+  } 
+  
+};
+    </script>
+ 
+    <!-- <audio className="audio-player" src="openingtheme.mp3" controls ></audio> -->
     <canvas id="canvas" width='1080' height='685' media='muted'></canvas>
   </body>
 </html>
