@@ -42,7 +42,7 @@ var canvas,
     bossenemy_w = 150,
     bossenemy_h = 150,
     bossenemy,
-    bossenemyHP = 200,
+    bossenemyHP = 20,
     backup = false,
     bossmagicTotal = 50,
     bossmagics = [],
@@ -53,10 +53,11 @@ var canvas,
     levelboss_y = 230,
     levelboss_w = 150,
     levelboss_h = 150,
-    levelbossHP = 300,
+    levelbossHP = 30,
     levelboss,
     drama = false,
     victory = false,
+    endscreen =true,
     rockTotal = 10,
     rocks = [],
     rock_x = 1200,
@@ -79,11 +80,11 @@ var canvas,
     gnome_x = 10, gnome_y = height/2, gnome_w = 50, gnome_h = 65,
     magicTotal = 100,
     magics = [],
-    score = 700,
+    score = 900,
     alive = true,
     lives = 3,
     cavemap,
-    caveX = 0, caveY = 0, caveY2 = 0, caveX2 = -5220,
+    caveX = 3000, caveY = 0, caveY2 = 0, caveX2 = 8220,
     bossmap,
     bossmapX = 5200, bossmapY = 50,
     gameStarted = false;
@@ -148,7 +149,7 @@ function drawLevelBoss(now) {
     drama = true;
   } else {
    ctx.drawImage(levelboss, levelboss_x, levelboss_y); 
-  if(now % 30 === 0){ 
+  if(now % 100 === 0 && !victory){ 
     bossmagic.src = './images/evilball.png'
     moveLevelBoss(now);
     }
@@ -160,6 +161,7 @@ function drawLevelBoss(now) {
 
 //Itterate over the rocks arr and draw new rocks
 function drawRocks() {
+  if(!victory){
   if (score < 1000){
     rock.src = 'rocks.png'
   for (var i = 0; i< rocks.length; i++){
@@ -173,7 +175,7 @@ function drawRocks() {
     rock.src = 'tentaclefloor.gif'
     ctx.drawImage(rock, rocks[i][0], rocks[i][1])
   }
-}
+}}
 }
 
 //When key is down moves the gnome
@@ -265,21 +267,33 @@ function moveBossEnemies() {
 }
 
 function moveLevelBoss(now){
-  bossmagics.push([levelboss_x +100, levelboss_y, bossmagic_w, bossmagic_h])
-  bossmagics.push([levelboss_x +250, levelboss_y, bossmagic_w, bossmagic_h])
-if(now % 2 === 0 && now % 4 !== 0){
-  bossmagics.push([levelboss_x +300, levelboss_y + 200, bossmagic_w, bossmagic_h])
-  bossmagics.push([levelboss_x +300, levelboss_y + 400, bossmagic_w, bossmagic_h])
+  if(!victory){
+ 
+if(Math.floor(Math.random()*100) % 2 === 0){
+  bossblastSound.play();
+  bossmagics.push([levelboss_x -100, 200, bossmagic_w, bossmagic_h])
+  bossmagics.push([levelboss_x +300, 400, bossmagic_w, bossmagic_h])
 }
-if(now % 4 === 0){
-  bossmagics.push([levelboss_x +300, levelboss_y + 600, bossmagic_w, bossmagic_h])
-  bossmagics.push([levelboss_x +300, levelboss_y + 100, bossmagic_w, bossmagic_h])
+if(Math.floor(Math.random()*100 )% 2 === 1){
+  bossblastSound.play();
+  bossmagics.push([levelboss_x -100, 500, bossmagic_w, bossmagic_h])
+  bossmagics.push([levelboss_x +300, -10, bossmagic_w, bossmagic_h])
+}
+if(now % 600 === 0){
+  bossRoarSound.play();
+  bossblastSound.play();
+  bossmagics.push([levelboss_x -100, 500, bossmagic_w, bossmagic_h])
+  bossmagics.push([levelboss_x +300, -10, bossmagic_w, bossmagic_h])
+  bossmagics.push([levelboss_x -100, 200, bossmagic_w, bossmagic_h])
+  bossmagics.push([levelboss_x +300, 400, bossmagic_w, bossmagic_h])
+}
 }
 
 }
 
 
 function moveRocks() {
+  if (!victory){
   for (var i = 0; i < rocks.length; i++){
   if(rocks[i][0] >= -800){
     rocks[i][0] -= 15;
@@ -295,7 +309,7 @@ for (var i = 0; i < stalagtites.length; i++){
     stalagtites[i][0] = 1600;
     stalagtites[i][1] = -175 - Math.random()*90;
   }
-}
+}}
 }
 
 //If there are magics in the magics array, then this will draw them on the canvas
@@ -327,7 +341,7 @@ function movemagic() {
 
 //If there are bossmagics in the bossmagics array, then this will draw them on the canvas
 function drawBossMagic() {
-  if (bossmagics.length)
+  if (bossmagics.length && !victory)
     for (var i = 0; i < bossmagics.length; i++) {   
      ctx.drawImage(bossmagic, bossmagics[i][0], bossmagics[i][1]);     
    }
@@ -441,12 +455,14 @@ function hitTest() {
        if ( magics[i][0] >= (levelboss_x) && magics[i][1] >= levelboss_y - levelboss_h && magics[i][1] <= (levelboss_y)) {
         
           hitSound.play();
-          ctx.drawImage(boom, (levelboss_x), (levelboss_y)  + 0, 430, 430);
+          ctx.drawImage(boom, (levelboss_x -100), (levelboss_y)  -200, 430, 430);
           remove = true;
           levelbossHP -= 1;
           if(levelbossHP <= 0){
-            victory = true;
             levelbossSound.stop();
+            bossScreamSound.play()
+            deadbossSound.play();
+            victory = true;
           }
         }
        
@@ -461,7 +477,7 @@ function hitTest() {
 
 //Similar to the magic hit test, this function checks to see if the player's gnome collides with any of the enemies or rocks
 function gnomeCollision() {
-  if(invincibility !== true){
+  if(invincibility !== true && !victory){
   var gnome_xw = gnome_x + gnome_w,
       gnome_yh = gnome_y + gnome_h;
   for (var i = 0; i < enemies.length; i++) {
@@ -617,6 +633,7 @@ function continueButton(e) {
     reset();
     canvas.removeEventListener('click', continueButton, false);
     bossSound.stop();
+    levelbossSound.stop();
     bossroared = false;
     bossmapX = 5200;
     themeSound.play();
@@ -663,10 +680,6 @@ function scoreTotal() {
     ctx.fillText('Use  W A S D to move', width / 2 -200, height / 2 + 120);
     ctx.fillText('Press spacebar to shoot', width / 2 -220, height / 2 + 180);
    
-    // ctx.fillRect((width/2 -30) , (0), 150, 50);
-    // ctx.fillStyle = '#000';
-    // ctx.fillText('Mute', width/2, (40) );  
-    // console.log(sound.muted)
     var sounds = document.getElementsByTagName('audio');
    for(i=0; i<sounds.length; i++){
    if(sounds[i].muted === false){
@@ -677,6 +690,7 @@ function scoreTotal() {
   if (!alive) {
     themeSound.stop();
     bossSound.stop();
+    levelbossSound.stop();
     ctx.font = 'bold 30px VT323';
     ctx.fillText('Game Over!', 465, height / 2 -20);
     ctx.fillRect((width / 2 -84) , (height / 2) + 10,150,50);
@@ -688,6 +702,8 @@ function scoreTotal() {
 
 //Draws and animates the background cavemap
 function drawcaveMap() {
+if(!victory){
+
   ctx.drawImage(cavemap,caveX,caveY);
   ctx.drawImage(cavemap,caveX2,caveY);
   if (caveX < -5220) {
@@ -696,8 +712,33 @@ function drawcaveMap() {
   if (caveX2 < -5220) {
     caveX2 = 5220;
   }
-  caveX -= 8;
-  caveX2 -= 8;
+  if(!victory){
+    caveX -= 8;
+    caveX2 -= 8;
+  }
+}
+  if(victory){
+    if(endscreen){
+      caveX = 2000;
+      caveX2 = 7200;
+      endscreen = false;
+    }
+    cavemap.src = './images/victoryMap.png'
+    ctx.drawImage(cavemap,caveX,caveY);
+    ctx.drawImage(cavemap, caveX2,caveY);
+  if (caveX < -5220) {
+    caveX = 5220;
+  }
+  if (caveX2 < -5220) {
+    caveX2 = 5220;
+  }
+  if (caveX <= -4150){ 
+    caveX -= 0;
+    caveX2 -= 0;
+} else {
+    caveX -= 3;
+    caveX2 -= 3;}
+  }
 }
 
 function drawbossMap() {
@@ -708,6 +749,10 @@ function drawbossMap() {
     bossRoar();
   } else {
     bossmapX -= 8;
+  }
+  if(victory){
+    bossmap.src = './images/cthulufacedeath.jpg'
+    bossmapY += 2
   }
 }
 }
@@ -765,6 +810,10 @@ function init() {
   bossRoarSound = new sound('tyranoroar.wav');
   blastSound = new sound('./sounds/blast.wav');
   levelbossSound = new sound('./sounds/levelboss.mp3')
+  victorythemeSound = new sound('./sounds/victory.mp3')
+  deadbossSound = new sound('./sounds/deadboss.wav')
+  bossScreamSound = new sound('./sounds/deadnoise.wav')
+  bossblastSound = new sound('./sounds/bossblast.wav')
   invincibility=false;
   document.addEventListener('keydown', keyDown, false);
   document.addEventListener('keyup', keyUp, false);
@@ -790,9 +839,10 @@ function gameLoop() {
     drawcaveMap()
   } 
   if (alive && gameStarted && lives > 0) {
-    if (score >= 1000) {
+    if (score >= 1000 && !victory) {
       themeSound.stop();
-      bossSound.play();
+      if(bossenemies.length){
+      bossSound.play();}
       drawbossMap();
       drawBossEnemies();
       moveBossEnemies();
@@ -814,12 +864,15 @@ function gameLoop() {
     drawpowerup();
     movepowerup();
 
-  } else if (victory === true){
-   // victorytheme.play()
-    drawgnome();
-    drawmagic();
-   // cavemap.src = './images/victoryMap'
+  } 
+  if (victory === true){
+    drawbossMap();    
+    levelbossSound.stop()
+    victorythemeSound.play()
     drawcaveMap();
+    drawmagic();
+    movemagic();
+    drawgnome();
   }
   scoreTotal();
   game = setTimeout(gameLoop, 1000 / 60);
@@ -842,7 +895,8 @@ function keyDown(e) {
 function keyUp(e) {
   if (e.keyCode === 68) rightKey = false;
   else if (e.keyCode === 65) {
-    gnome.src ='./images/supergnome2.gif'
+    gnome.src ='./images/supergnome2.gif';
+    leftKey = false;
   }
   if (e.keyCode === 87) upKey = false;
   else if (e.keyCode === 83) {downKey = false};
