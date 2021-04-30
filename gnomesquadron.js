@@ -80,7 +80,7 @@ var canvas,
     gnome_x = 10, gnome_y = height/2, gnome_w = 50, gnome_h = 65,
     magicTotal = 100,
     magics = [],
-    score = 900,
+    score = 0,
     alive = true,
     lives = 3,
     cavemap,
@@ -805,7 +805,7 @@ function init() {
   gnomesplosion = new Image();
   gnomesplosion.src = 'gnomehit.png';
   powerup = new Image();
-  powerup.src = './images/powerup.gif';
+  powerup.src = './images/powerup.png';
   bossmap = new Image();
   bossmap.src = 'cthuluface.jpg';
   bossenemy = new Image();
@@ -899,7 +899,7 @@ function gameLoop() {
 function keyDown(e) {
   if (e.keyCode === 68) rightKey = true;
   else if (e.keyCode === 65) {leftKey = true;
-  gnome.src= './images/supergnomeidle2.gif';}
+  gnome.src= './images/supergnomeidle3.gif';}
   if (e.keyCode === 87) upKey = true;
   else if (e.keyCode === 83) downKey = true;
   if (e.keyCode === 32 && magics.length <= magicTotal && alive && gameStarted && lives > 0){
