@@ -15,7 +15,7 @@
 
 </head>
   <body >    
-      <button id="stopButton" class="stopit" type="button">
+      <button id="stopButton" class="stopit" type="button"  onkeyup="event.preventDefault()">
        <div class="stopit">
          Muted
        </div>
@@ -23,6 +23,7 @@
   
     <script>      
 document.getElementById('stopButton').onclick = function() {
+
   const muter = document.querySelector(".stopit");
   var sounds = document.getElementsByTagName('audio');
   for(i=0; i<sounds.length; i++){

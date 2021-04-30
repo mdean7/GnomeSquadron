@@ -141,7 +141,7 @@ function drawBossEnemies() {
  }
 }
 function drawLevelBoss(now) {
-  if(bossroared === true && score >= 1100 && !bossenemies.length && !victory){
+  if(bossroared === true && score >= 1000 && !bossenemies.length && !victory){
     bossSound.stop(); 
     if(!drama) {    
     bossRoarSound.play()
@@ -216,6 +216,7 @@ function moveEnemies() {
 function moveBossEnemies() {
 
   if(bossroared === true && score >= 1000 && bossenemies.length){
+    
     for (var i = 0; i < bossenemies.length; i++) {
       if (bossenemies[i][0] > 400 && !backup){
         bossenemies[i][0] -= 3;      
@@ -240,9 +241,9 @@ function moveBossEnemies() {
       }
       if(backup){
         bossenemies[i][0] += 3; 
-        if(bossenemies[1] && bossenemies[1][0] > 450 &&  bossenemies[1][0] < 455){      
+        if(bossenemies[1] && bossenemies[1][0] > 500 &&  bossenemies[1][0] < 505){      
+          blastSound.play(); 
         bossmagics.push([bossenemies[1][0] - 25, bossenemies[1][1] - 20, bossmagic_w, bossmagic_h])
-        blastSound.play(); 
       }
     }       
       
@@ -268,7 +269,7 @@ function moveBossEnemies() {
 
 function moveLevelBoss(now){
   if(!victory){
- 
+    bossmagics.push([levelboss_x +100, width/2, bossmagic_w, bossmagic_h])
 if(Math.floor(Math.random()*100) % 2 === 0){
   bossblastSound.play();
   bossmagics.push([levelboss_x -100, 200, bossmagic_w, bossmagic_h])
@@ -279,7 +280,7 @@ if(Math.floor(Math.random()*100 )% 2 === 1){
   bossmagics.push([levelboss_x -100, 500, bossmagic_w, bossmagic_h])
   bossmagics.push([levelboss_x +300, -10, bossmagic_w, bossmagic_h])
 }
-if(now % 600 === 0){
+if(now % 300 === 0){
   bossRoarSound.play();
   bossblastSound.play();
   bossmagics.push([levelboss_x -100, 500, bossmagic_w, bossmagic_h])
@@ -372,7 +373,7 @@ function movepowerup(){
   for (let i = 0; i < powerups.length; i++) {  
     if(score > 50) { 
     if (powerups[i][0] > 0) {
-      powerups[i][0] -= 10;
+      powerups[i][0] -= 5;
     } 
    else if(powerups[i][0] <= 0){
      powerups.push(powerup_x, powerup_y, powerup_w, powerup_h)
@@ -422,7 +423,7 @@ function hitTest() {
      if (!poweredUp && magics[i][0] >= (bossenemies[j][0]) && magics[i][1] >= bossenemies[j][1] - bossenemies[j][3] && magics[i][1] <= (bossenemies[j][1] + bossenemies[j][3])) {
       
         hitSound.play();
-        ctx.drawImage(boom, (bossenemies[j][0]), (bossenemies[j][1])  + 0, 130, 130);
+        ctx.drawImage(boom, (bossenemies[j][0]-50), (bossenemies[j][1])  + 0, 130, 130);
         remove = true;
         bossenemies[i][5] -= 1;
         if(bossenemies[j][5] <=0){
@@ -433,7 +434,7 @@ function hitTest() {
       if ( poweredUp && magics[i][0] >= (bossenemies[j][0]) && magics[i][1] >= bossenemies[j][1] - bossenemies[j][3] && magics[i][1] <= (bossenemies[j][1] + bossenemies[j][3])) {
       
         hitSound.play();
-        ctx.drawImage(boom, (bossenemies[j][0]), (bossenemies[j][1])  + 0, 130, 130);
+        ctx.drawImage(boom, (bossenemies[j][0]-50), (bossenemies[j][1])  + 0, 130, 130);
         remove = true;
         bossenemies[j][5] -= 1;
         if(bossenemies[j][5] <=0){
@@ -454,22 +455,23 @@ function hitTest() {
 
        if ( magics[i][0] >= (levelboss_x) && magics[i][1] >= levelboss_y - levelboss_h && magics[i][1] <= (levelboss_y)) {
         
-          hitSound.play();
-          ctx.drawImage(boom, (levelboss_x -100), (levelboss_y)  -200, 430, 430);
-          remove = true;
-          levelbossHP -= 1;
-          if(levelbossHP <= 0){
-            levelbossSound.stop();
-            bossScreamSound.play()
-            deadbossSound.play();
-            victory = true;
+         hitSound.play();
+         ctx.drawImage(boom, (levelboss_x -100), (levelboss_y)  -200, 430, 430);
+         remove = true;
+         levelbossHP -= 1;
+         levelboss.src = './images/levelbossHit.gif'
+         setTimeout(()=>(levelboss.src = './images/levelboss.gif'),100) 
+         if(levelbossHP <= 0){
+           levelbossSound.stop();
+           bossScreamSound.play()
+           deadbossSound.play();
+           victory = true;
           }
+        }        
+        if (remove === true) {
+          magics.splice(i, 1);
+          remove = false;
         }
-       
-      if (remove === true) {
-        magics.splice(i, 1);
-        remove = false;
-      }
     }}
 }
 
@@ -630,15 +632,31 @@ function continueButton(e) {
     lives = 3;
     score = 0;
     gnome_x = 10, gnome_y = height/2, gnome_w = 50, gnome_h = 57;
-    reset();
-    canvas.removeEventListener('click', continueButton, false);
     bossSound.stop();
     levelbossSound.stop();
+    drama = false;
     bossroared = false;
     bossmapX = 5200;
     themeSound.play();
-
+    for(var i =0; i< bossmagics.length; i++){
+      bossmagics[i].splice(i,1);
+    }
+    if (bossenemies.length){
+      for (var i = 0; i < bossenemies.length; i++) {
+        bossenemies.splice(i,1);
+      }
+    }
+    bossenemyTotal = 3;
+    bossenemy_x = 500;
+    bossenemy_y = 30;
+    bossmagic.src = './images/cthulufire.png' 
+    for (var i = 0; i < bossenemyTotal; i++) {      
+      bossenemies.push([bossenemy_x, bossenemy_y + 10, 150, 150, 3, 100]);
+      bossenemy_y += bossenemy_h + 90;
+    }
   }
+  reset();
+  canvas.removeEventListener('click', continueButton, false);
 }
 
 //holds the cursors position
@@ -808,7 +826,7 @@ function init() {
   powerupSound = new sound('powerupSound.wav');
   bossSound = new sound('bossfight.mp3');
   bossRoarSound = new sound('tyranoroar.wav');
-  blastSound = new sound('./sounds/blast.wav');
+  blastSound = new sound('./sounds/minionblast2.wav');
   levelbossSound = new sound('./sounds/levelboss.mp3')
   victorythemeSound = new sound('./sounds/victory.mp3')
   deadbossSound = new sound('./sounds/deadboss.wav')
@@ -832,7 +850,6 @@ var last = new Date();
 //The main function of the game, it calls all the other functions needed to make the game run
 function gameLoop() {
   var now =new Date();
-  var elapsedSeconds = (now - last) / 1000;
   last = now;
   clearCanvas();
   if (score < 1000) {
@@ -885,7 +902,7 @@ function keyDown(e) {
   gnome.src= './images/supergnomeidle2.gif';}
   if (e.keyCode === 87) upKey = true;
   else if (e.keyCode === 83) downKey = true;
-  if (e.keyCode === 32 && magics.length <= magicTotal){
+  if (e.keyCode === 32 && magics.length <= magicTotal && alive && gameStarted && lives > 0){
     magicSound.play(); 
     magics.push([gnome_x + 25, gnome_y - 20, 4, 20]);
   } 
