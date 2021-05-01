@@ -42,7 +42,7 @@ var canvas,
     bossenemy_w = 150,
     bossenemy_h = 150,
     bossenemy,
-    bossenemyHP = 20,
+    bossenemyHP = 50,
     backup = false,
     bossmagicTotal = 50,
     bossmagics = [],
@@ -53,7 +53,7 @@ var canvas,
     levelboss_y = 230,
     levelboss_w = 150,
     levelboss_h = 150,
-    levelbossHP = 30,
+    levelbossHP = 300,
     levelboss,
     drama = false,
     victory = false,
@@ -638,7 +638,7 @@ function continueButton(e) {
     bossroared = false;
     bossmapX = 5200;
     themeSound.play();
-    for(var i =0; i< bossmagics.length; i++){
+    for(var i =0; i < bossmagics.length; i++){
       bossmagics[i].splice(i,1);
     }
     if (bossenemies.length){
@@ -651,7 +651,7 @@ function continueButton(e) {
     bossenemy_y = 30;
     bossmagic.src = './images/cthulufire.png' 
     for (var i = 0; i < bossenemyTotal; i++) {      
-      bossenemies.push([bossenemy_x, bossenemy_y + 10, 150, 150, 3, 100]);
+      bossenemies.push([bossenemy_x, bossenemy_y, 150, 150, 3, 50]);
       bossenemy_y += bossenemy_h + 90;
     }
   }
