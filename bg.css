@@ -38,8 +38,83 @@ canvas {
   align-items: flex-end;
 }
 .stopit {
+  font-family: 'VT323', monospace;
   font-weight: 900;
-  font-size: 30px;
+  font-size: 50px;
   color: rgb(255, 0, 0);
-
 }
+.github-link{
+
+  height: 50px;
+  width: 50px;
+  background-image: url('./images/github-gif.gif');
+  background-repeat: no-repeat;
+  background-size: contain;
+  position: absolute;
+  bottom: 140px;
+  left: 50px;
+}
+
+.linkedin-link{
+  display: flex;
+  justify-content: flex-start;
+  font-weight: 900;
+  height: 50px;
+  width: 60px;
+  background-image: url('./images/linked-in.gif');
+  background-repeat: no-repeat;
+  background-size: contain;
+  position: absolute;
+  bottom: 140px;
+  left: 132.2px;
+}
+.link-text{
+  font-weight: 900;
+  position: absolute;
+  bottom: 178px;
+  left: 110px;
+}
+
+.story {
+  border: solid 5px red;
+  background: black;
+  background-image: none;
+  background-size: contain;
+  background-repeat: no-repeat;
+  padding: 20px;
+  color: white;
+  width:800px;
+  left: 30vw;
+  height: 421px;
+  top: 10vw;
+  position: absolute;
+  font-size: 35px;
+  display: flex;
+  opacity: 0;
+}
+
+.story.up {
+  opacity: 1;
+  /* background-image: url('./images/amazing.gif'); */
+}
+.op {
+background: black;
+color: red;
+height: 120px;
+width: 200px;
+background-image: url('./images/welcomegnome.jpg');
+background-size: contain;
+background-position: center;
+background-repeat: no-repeat;
+position: absolute;
+bottom: 330px;
+left: 40px;
+display: inline-flex;
+align-items: flex-end;
+
+font-family: 'VT323', monospace;
+font-weight: 900;
+font-size: 50px;
+color: rgb(255, 0, 0);
+}
+

@@ -22,12 +22,53 @@
 <script src="gnomesquadron.js"></script>
 
 </head>
-  <body >    
+  <body >  
+
+    <button id="op" class="op" type="button"  onkeyup="event.preventDefault()">
+      <div class="op-text">
+        Orders
+      </div>
+     </button>
+     <div id="wut"></div>
+    <script>      
+      document.getElementById('op').onclick = function() {   
+        let pstory = document.getElementById('wut');  
+
+        if(pstory.childElementCount > 0){
+          let cstory = document.getElementById('child')
+          cstory.style.backgroundImage = 'url(river.jpg)'
+          pstory.removeChild(cstory)
+          cstory.remove()
+        } else {
+          let cstory = document.createElement('div')
+              cstory.classList.add('story')
+              cstory.classList.add('up');
+              cstory.id = 'child'
+              cstory.style.backgroundImage = 'url(./images/amazing.gif )'
+              pstory.appendChild(cstory);
+
+        }
+
+      };
+          </script>
+       
+
       <button id="stopButton" class="stopit" type="button"  onkeyup="event.preventDefault()">
        <div class="stopit">
          Muted
        </div>
       </button>
+      <a href="https://github.com/mdean7/GnomeSquadron">
+        <div class="github-link">
+        </div>
+        </a>
+        <a href="https://www.linkedin.com/in/michael-dean-717931185/">
+          <div class="link-text">
+            Linkedin
+          </div>
+          <div class="linkedin-link">
+          </div>
+          </a>
   
     <script>      
 document.getElementById('stopButton').onclick = function() {
