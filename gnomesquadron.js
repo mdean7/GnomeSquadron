@@ -577,6 +577,8 @@ function gnomeCollision() {
     }
   }
   for (var i = 0; i < powerups.length; i++) {
+    if(poweredUp){powerups.splice(i, 1)
+    } else {
    if (gnome_xw > powerups[i][0] && gnome_x < powerups[i][0] + powerup_w && gnome_yh > powerups[i][1] && gnome_y < powerups[i][1] + powerup_h) {
     powerupSound.play()
      poweredUp=true;
@@ -592,7 +594,7 @@ function gnomeCollision() {
     if (gnome_yh > powerups[i][1] && gnome_yh < powerups[i][1] + powerup_h && gnome_xw < powerups[i][0] + powerup_w && gnome_xw > powerups[i][0]) {
       powerupSound.play()
      poweredUp=true;
-    }
+    }}
   }
 }
 }
