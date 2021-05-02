@@ -95,7 +95,7 @@ canvas {
 
 .story.up {
   opacity: 1;
-  /* background-image: url('./images/amazing.gif'); */
+  background-image: url('./images/amazing.gif');
 }
 .op {
 background: black;
