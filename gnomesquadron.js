@@ -53,7 +53,7 @@ var canvas,
     levelboss_y = 230,
     levelboss_w = 150,
     levelboss_h = 150,
-    levelbossHP = 300,
+    levelbossHP = 200,
     levelboss,
     drama = false,
     victory = false,
@@ -356,6 +356,9 @@ function moveBossMagic() {
     } 
     if (bossmagics[i][0] <= 0) {
      bossmagics.splice(i, 1);
+   }
+   if(bossroared === false){
+    bossmagics.splice(i, 1)
    }
  }
 }
