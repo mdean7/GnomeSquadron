@@ -25,8 +25,8 @@
   <body >  
 
     <button id="op" class="op" type="button"  onkeyup="event.preventDefault()">
-      <div class="op-text">
-        Orders
+      <div id="op-text" class="op-text">
+     Orders
       </div>
      </button>
      <div id="wut">
@@ -35,13 +35,15 @@
     <script>      
       document.getElementById('op').onclick = function() {   
         let pstory = document.getElementById('wut');  
-
+        let msg =  document.getElementById('op-text')
         if(pstory.childElementCount > 0){
+          msg.textContent = "Orders"
           let cstory = document.getElementById('child')
           cstory.style.backgroundImage = 'url(river.jpg)'
           pstory.removeChild(cstory)
           cstory.remove()
         } else {
+          msg.textContent = " Hide Orders"
           let cstory = document.createElement('div')
               cstory.classList.add('story')
               cstory.classList.add('up');
