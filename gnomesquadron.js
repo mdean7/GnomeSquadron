@@ -221,7 +221,7 @@ function drawgnome() {
 
 //Move ene left on the canvas and if one passes the left of the canvas, it moves it to right of the canvas
 function moveEnemies() {
-  var circle = Math.PI * 2;
+  
   for (var i = 0; i < enemies.length; i++) {
     if (enemies[i][0] >= 0) {
       enemies[i][0] -= 5 * enemies[i][4];
@@ -330,8 +330,8 @@ function moveLevelBoss(now) {
     bossmagics.push([levelboss_x + 100, width / 2, bossmagic_w, bossmagic_h]);
     if (Math.floor(Math.random() * 100) % 2 === 0) {
       bossblastSound.play();
-      bossmagics.push([levelboss_x - 100, 200, bossmagic_w, bossmagic_h]);
-      bossmagics.push([levelboss_x + 300, 400, bossmagic_w, bossmagic_h]);
+      bossmagics.push([levelboss_x - 100, 150, bossmagic_w, bossmagic_h]);
+      // bossmagics.push([levelboss_x + 300, 400, bossmagic_w, bossmagic_h]);
     }
     if (Math.floor(Math.random() * 100) % 2 === 1) {
       bossblastSound.play();
@@ -343,8 +343,8 @@ function moveLevelBoss(now) {
       bossblastSound.play();
       bossmagics.push([levelboss_x - 100, 500, bossmagic_w, bossmagic_h]);
       bossmagics.push([levelboss_x + 300, -10, bossmagic_w, bossmagic_h]);
-      bossmagics.push([levelboss_x - 100, 200, bossmagic_w, bossmagic_h]);
-      bossmagics.push([levelboss_x + 300, 400, bossmagic_w, bossmagic_h]);
+      bossmagics.push([levelboss_x - 100, 150, bossmagic_w, bossmagic_h]);
+      // bossmagics.push([levelboss_x + 300, 400, bossmagic_w, bossmagic_h]);
     }
   }
 }
