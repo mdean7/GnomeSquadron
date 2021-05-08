@@ -42,7 +42,7 @@ var canvas,
   bossenemy_w = 150,
   bossenemy_h = 150,
   bossenemy,
-  bossenemyHP = 50,
+  bossenemyHP = 25,
   backup = false,
   bossmagicTotal = 50,
   bossmagics = [],
@@ -726,44 +726,47 @@ function gnomeCollision() {
         checkLives();
       }
     }
-    for (var i = 0; i < stalagtites.length; i++) {
-      if (
-        gnome_x > stalagtites[i][0] &&
-        gnome_x < stalagtites[i][0] + stalagtite_w &&
-        gnome_y < stalagtites[i][1] &&
-        gnome_y < stalagtites[i][1] + stalagtite_h
-      ) {
-        ramSound.play();
-        checkLives();
-      }
-      if (
-        gnome_xw < stalagtites[i][0] + stalagtite_w &&
-        gnome_xw > stalagtites[i][0] &&
-        gnome_y < stalagtites[i][1] &&
-        gnome_y < stalagtites[i][1] + stalagtite_h
-      ) {
-        ramSound.play();
-        checkLives();
-      }
-      if (
-        gnome_y < stalagtites[i][1] + stalagtite_h &&
-        gnome_x > stalagtites[i][0] &&
-        gnome_x < stalagtites[i][0] + stalagtite_w
-      ) {
-        ramSound.play();
-        checkLives();
-      }
-      if (
-        gnome_y < stalagtites[i][1] + stalagtite_h &&
-        gnome_xw < stalagtites[i][0] + stalagtite_w &&
-        gnome_xw > stalagtites[i][0]
-      ) {
-        ramSound.play();
-        checkLives();
-      }
-    }
-    for (var i = 0; i < powerups.length; i++) {
-      if (poweredUp) {
+    if(score < 1000){
+
+      for (var i = 0; i < stalagtites.length; i++) {
+        if (
+          gnome_x > stalagtites[i][0] &&
+          gnome_x < stalagtites[i][0] + stalagtite_w &&
+          gnome_y < stalagtites[i][1] &&
+          gnome_y < stalagtites[i][1] + stalagtite_h
+          ) {
+            ramSound.play();
+            checkLives();
+          }
+          if (
+            gnome_xw < stalagtites[i][0] + stalagtite_w &&
+            gnome_xw > stalagtites[i][0] &&
+            gnome_y < stalagtites[i][1] &&
+            gnome_y < stalagtites[i][1] + stalagtite_h
+            ) {
+              ramSound.play();
+              checkLives();
+            }
+            if (
+              gnome_y < stalagtites[i][1] + stalagtite_h &&
+              gnome_x > stalagtites[i][0] &&
+              gnome_x < stalagtites[i][0] + stalagtite_w
+              ) {
+                ramSound.play();
+                checkLives();
+              }
+              if (
+                gnome_y < stalagtites[i][1] + stalagtite_h &&
+                gnome_xw < stalagtites[i][0] + stalagtite_w &&
+                gnome_xw > stalagtites[i][0]
+                ) {
+                  ramSound.play();
+                  checkLives();
+                }
+              }
+            }
+              for (var i = 0; i < powerups.length; i++) {
+                if (poweredUp) {
         powerups.splice(i, 1);
       } else {
         if (
