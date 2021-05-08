@@ -495,7 +495,7 @@ function hitTest() {
           !poweredUp &&
           magics[i][0] >= bossenemies[j][0] &&
           magics[i][1] >= bossenemies[j][1] - bossenemies[j][3] &&
-          magics[i][1] <= bossenemies[j][1] + bossenemies[j][3]
+          magics[i][1] <= bossenemies[j][1] 
         ) {
           hitSound.play();
           ctx.drawImage(
@@ -506,7 +506,7 @@ function hitTest() {
             130
           );
           remove = true;
-          bossenemies[i][5] -= 1;
+          bossenemies[j][5] -= 1;
           if (bossenemies[j][5] <= 0) {
             bossenemies.splice(j, 1);
             score += 100;
@@ -540,6 +540,7 @@ function hitTest() {
       }
     }
   }
+  
 
   //levelboss hit test
   if (bossroared === true && !bossenemies.length && score > 1000 && !victory) {
