@@ -494,8 +494,8 @@ function hitTest() {
         if (
           !poweredUp &&
           magics[i][0] >= bossenemies[j][0] &&
-          magics[i][1] >= bossenemies[j][1] - bossenemies[j][3] &&
-          magics[i][1] <= bossenemies[j][1] 
+          magics[i][1] >= bossenemies[j][1] - (bossenemies[j][3]/2) &&
+          magics[i][1] <= bossenemies[j][1] + (bossenemies[j][3]/2)
         ) {
           hitSound.play();
           ctx.drawImage(
