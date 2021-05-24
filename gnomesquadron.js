@@ -157,8 +157,7 @@ function clearCanvas() {
 //Itterate over the enemy arr and draw new ones
 function drawEnemies() {
   for (var i = 0; i < enemies.length; i++) {
-    if(i % 2 === 0){ enemy.src = './images/ghost.gif'}
-    if(i % 2 === 1){ enemy.src = './images/ghost2.gif'}
+    
     ctx.drawImage(enemy, enemies[i][0], enemies[i][1]);
   }
 }
