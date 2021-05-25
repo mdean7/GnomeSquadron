@@ -221,24 +221,24 @@ function drawgnome() {
   ctx.drawImage(gnome, gnome_x, gnome_y);
 }
 
-//Move ene left on the canvas and if one passes the left of the canvas, it moves it to right of the canvas
+//Move enemy left on the canvas and if one passes the left of the canvas, it moves it to right of the canvas
 function moveEnemies() {
   
   for (var i = 0; i < enemies.length; i++) {
     if (enemies[i][0] >= 0) {
       enemies[i][0] -= 5 * enemies[i][4];
-      if (i % 2 === 0) {
-        enemies[i][1] -= 1;
-      }
-      if (i % 2 === 1) {
-        enemies[i][0] -= 2;
-        enemies[i][1] += 2;
-        enemies[i][0] += 12;
-        enemies[i][1] -= 2;
-        enemies[i][0] += 15;
-        enemies[i][1] -= 1;
-        enemies[i][0] -= 10;
-      }
+      // if (i % 2 === 0) {
+      //   enemies[i][1] -= 1;
+      // }
+    //   if (i % 2 === 1) {
+    //     enemies[i][0] -= 2;
+    //     enemies[i][1] += 2;
+    //     enemies[i][0] += 12;
+    //     enemies[i][1] -= 2;
+    //     enemies[i][0] += 15;
+    //     enemies[i][1] -= 1;
+    //     enemies[i][0] -= 10;
+    //   }
     }
     if (enemies[i][0] <= 10 || enemies[i][1] <= 10 || enemies[i][1] > 550) {
       enemies[i][0] = 1300;
@@ -407,13 +407,13 @@ function drawBossMagic() {
     }
 }
 
-//If we're drawing bossmagic on the canvas, this moves them right on the canvas
+//If we're drawing bossmagic on the canvas, this moves them left on the canvas
 function moveBossMagic() {
   for (var i = 0; i < bossmagics.length; i++) {
-    if (bossmagics[i][0] > -10) {
+    if (bossmagics[i][0] > -500) {
       bossmagics[i][0] -= 8;
     }
-    if (bossmagics[i][0] <= 0) {
+    if (bossmagics[i][0] <= -500) {
       bossmagics.splice(i, 1);
     }
     if (bossroared === false) {
@@ -655,6 +655,7 @@ function gnomeCollision() {
           checkLives();
         }
       }
+      if(score >= 1300){bossmagic_h = 135} else {bossmagic_h = 45}
       for (var i = 0; i < bossmagics.length; i++) {
         if (
           gnome_xw > bossmagics[i][0] &&
@@ -666,7 +667,7 @@ function gnomeCollision() {
         }
         if (
           gnome_xw < bossmagics[i][0] + bossmagic_w &&
-          gnome_xw > bossmagics[i][0] &&
+          gnome_xw > bossmagics[i][0]- 8 &&
           gnome_y > bossmagics[i][1] &&
           gnome_y < bossmagics[i][1] + bossmagic_h
         ) {
@@ -1124,7 +1125,13 @@ function gameLoop() {
 
 //Checks to see which key has been pressed and either to move the gnome or fire a magic
 function keyDown(e) {
-  if (e.keyCode === 68) rightKey = true;
+  let nope = false;
+  if(score >= 1000 && !bossroared){
+    leftKey = true;
+    nope = true;
+  }
+  if(bossroared){nope = false}
+  if (e.keyCode === 68 && !nope) rightKey = true;
   else if (e.keyCode === 65) {
     leftKey = true;
     gnome.src = "./images/supergnomeidle3.gif";
