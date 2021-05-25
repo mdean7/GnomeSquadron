@@ -12,7 +12,7 @@ Users will be able to:
 
 
 ## Wireframe
-The game has a splash page with insutrctions, a mute button and a brief animated description of the games plot that I made by hand.
+The game has a splash page with instructions, a mute button and a brief animated description of the games plot that I made by hand.
 <img src='./images/amazing.gif' />
 
 
