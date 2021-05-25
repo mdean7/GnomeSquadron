@@ -1121,6 +1121,7 @@ function keyDown(e) {
     leftKey = true;
     nope = true;
   }
+  if(bossroared){leftKey = false}
   if(bossroared){nope = false}
   if (e.keyCode === 68 && !nope) rightKey = true;
   else if (e.keyCode === 65) {
