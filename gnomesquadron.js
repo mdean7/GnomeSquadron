@@ -29,7 +29,7 @@ var canvas,
   powerup,
   enemies = [],
   enemyTotal = 6,
-  enemy_x = 1200,
+  enemy_x = 2200,
   enemy_y = 30,
   enemy_w = 50,
   enemy_h = 18,
@@ -156,7 +156,7 @@ function clearCanvas() {
 
 //Itterate over the enemy arr and draw new ones
 function drawEnemies() {
-  if(score >= 600){ enemy.src = "./images/ghost2.gif"}
+  if (score >= 600) { enemy.src = "./images/ghost2.gif" }
   for (var i = 0; i < enemies.length; i++) {
     ctx.drawImage(enemy, enemies[i][0], enemies[i][1]);
   }
@@ -222,12 +222,13 @@ function drawgnome() {
 
 //Move enemy left on the canvas and if one passes the left of the canvas, it moves it to right of the canvas
 function moveEnemies() {
-  
+
   for (var i = 0; i < enemies.length; i++) {
     if (enemies[i][0] >= -80) {
-      enemies[i][0] -= 18 + Math.floor(Math.random()*15);
-      if(i%2 === 0){
-      enemies[i][1] -= 1 + Math.floor(Math.random()*5)}
+      enemies[i][0] -= 18 + Math.floor(Math.random() * 15);
+      if (i % 2 === 0) {
+        enemies[i][1] -= 1 + Math.floor(Math.random() * 5)
+      }
     }
 
 
@@ -487,8 +488,8 @@ function hitTest() {
         if (
           !poweredUp &&
           magics[i][0] >= bossenemies[j][0] &&
-          magics[i][1] >= bossenemies[j][1] - (bossenemies[j][3]/2) &&
-          magics[i][1] <= bossenemies[j][1] + (bossenemies[j][3]/2)
+          magics[i][1] >= bossenemies[j][1] - (bossenemies[j][3] / 2) &&
+          magics[i][1] <= bossenemies[j][1] + (bossenemies[j][3] / 2)
         ) {
           hitSound.play();
           ctx.drawImage(
@@ -533,7 +534,7 @@ function hitTest() {
       }
     }
   }
-  
+
 
   //levelboss hit test
   if (bossroared === true && !bossenemies.length && score > 1000 && !victory) {
@@ -646,7 +647,7 @@ function gnomeCollision() {
           checkLives();
         }
       }
-      if(score >= 1300){bossmagic_h = 135} else {bossmagic_h = 45}
+      if (score >= 1300) { bossmagic_h = 135 } else { bossmagic_h = 45 }
       for (var i = 0; i < bossmagics.length; i++) {
         if (
           gnome_xw > bossmagics[i][0] &&
@@ -658,7 +659,7 @@ function gnomeCollision() {
         }
         if (
           gnome_xw < bossmagics[i][0] + bossmagic_w &&
-          gnome_xw > bossmagics[i][0]- 8 &&
+          gnome_xw > bossmagics[i][0] - 8 &&
           gnome_y > bossmagics[i][1] &&
           gnome_y < bossmagics[i][1] + bossmagic_h
         ) {
@@ -721,7 +722,7 @@ function gnomeCollision() {
         checkLives();
       }
     }
-    if(score < 1000){
+    if (score < 1000) {
 
       for (var i = 0; i < stalagtites.length; i++) {
         if (
@@ -729,39 +730,39 @@ function gnomeCollision() {
           gnome_x < stalagtites[i][0] + stalagtite_w &&
           gnome_y < stalagtites[i][1] &&
           gnome_y < stalagtites[i][1] + stalagtite_h
-          ) {
-            ramSound.play();
-            checkLives();
-          }
-          if (
-            gnome_xw < stalagtites[i][0] + stalagtite_w &&
-            gnome_xw > stalagtites[i][0] &&
-            gnome_y < stalagtites[i][1] &&
-            gnome_y < stalagtites[i][1] + stalagtite_h
-            ) {
-              ramSound.play();
-              checkLives();
-            }
-            if (
-              gnome_y < stalagtites[i][1] + stalagtite_h &&
-              gnome_x > stalagtites[i][0] &&
-              gnome_x < stalagtites[i][0] + stalagtite_w
-              ) {
-                ramSound.play();
-                checkLives();
-              }
-              if (
-                gnome_y < stalagtites[i][1] + stalagtite_h &&
-                gnome_xw < stalagtites[i][0] + stalagtite_w &&
-                gnome_xw > stalagtites[i][0]
-                ) {
-                  ramSound.play();
-                  checkLives();
-                }
-              }
-            }
-              for (var i = 0; i < powerups.length; i++) {
-                if (poweredUp) {
+        ) {
+          ramSound.play();
+          checkLives();
+        }
+        if (
+          gnome_xw < stalagtites[i][0] + stalagtite_w &&
+          gnome_xw > stalagtites[i][0] &&
+          gnome_y < stalagtites[i][1] &&
+          gnome_y < stalagtites[i][1] + stalagtite_h
+        ) {
+          ramSound.play();
+          checkLives();
+        }
+        if (
+          gnome_y < stalagtites[i][1] + stalagtite_h &&
+          gnome_x > stalagtites[i][0] &&
+          gnome_x < stalagtites[i][0] + stalagtite_w
+        ) {
+          ramSound.play();
+          checkLives();
+        }
+        if (
+          gnome_y < stalagtites[i][1] + stalagtite_h &&
+          gnome_xw < stalagtites[i][0] + stalagtite_w &&
+          gnome_xw > stalagtites[i][0]
+        ) {
+          ramSound.play();
+          checkLives();
+        }
+      }
+    }
+    for (var i = 0; i < powerups.length; i++) {
+      if (poweredUp) {
         powerups.splice(i, 1);
       } else {
         if (
@@ -1117,14 +1118,15 @@ function gameLoop() {
 //Checks to see which key has been pressed and either to move the gnome or fire a magic
 function keyDown(e) {
   let nope = false;
-  if(score >= 1000 && !bossroared){
+  if (bossroared) { nope = false }
+  if (score >= 1000 && !bossroared) {
     leftKey = true;
+    gnome.src = "./images/supergnomeidle3.gif";
     nope = true;
   }
-  if(bossroared){leftKey = false}
-  if(bossroared){nope = false}
+
   if (e.keyCode === 68 && !nope) rightKey = true;
-  else if (e.keyCode === 65) {
+  else if (e.keyCode === 65  && !nope) {
     leftKey = true;
     gnome.src = "./images/supergnomeidle3.gif";
   }
