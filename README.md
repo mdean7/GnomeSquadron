@@ -6,7 +6,7 @@ As a fun mini game for my previous Arium project I created this side scrolling s
 
 ## Functionality & MVP
 Users will be able to:
-* Fly around the skin and shoot evil spirits.
+* Fly around the screen and shoot evil spirits.
 * They will be able to acquire a power up and fight both a mini boss and a final boss.
 * Loss of 3 lives will prompt a continue screen which resets the game.
 
