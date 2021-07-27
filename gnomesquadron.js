@@ -1165,6 +1165,7 @@ function sound(src) {
   this.sound.style.display = "none";
   document.body.appendChild(this.sound);
   this.play = function () {
+    this.sound.volume = 0.5;
     this.sound.play();
   };
   this.stop = function () {
