@@ -29,7 +29,7 @@ var canvas,
   powerup,
   enemies = [],
   enemyTotal = 6,
-  enemy_x = 1200,
+  enemy_x = 2200,
   enemy_y = 30,
   enemy_w = 50,
   enemy_h = 18,
@@ -156,9 +156,8 @@ function clearCanvas() {
 
 //Itterate over the enemy arr and draw new ones
 function drawEnemies() {
+  if (score >= 600) { enemy.src = "./images/ghost2.gif" }
   for (var i = 0; i < enemies.length; i++) {
-    if(i % 2 === 0){ enemy.src = './images/ghost.gif'}
-    if(i % 2 === 1){ enemy.src = './images/ghost2.gif'}
     ctx.drawImage(enemy, enemies[i][0], enemies[i][1]);
   }
 }
@@ -221,27 +220,20 @@ function drawgnome() {
   ctx.drawImage(gnome, gnome_x, gnome_y);
 }
 
-//Move ene left on the canvas and if one passes the left of the canvas, it moves it to right of the canvas
+//Move enemy left on the canvas and if one passes the left of the canvas, it moves it to right of the canvas
 function moveEnemies() {
-  
+
   for (var i = 0; i < enemies.length; i++) {
-    if (enemies[i][0] >= 0) {
-      enemies[i][0] -= 5 * enemies[i][4];
+    if (enemies[i][0] >= -80) {
+      enemies[i][0] -= 18 + Math.floor(Math.random() * 15);
       if (i % 2 === 0) {
-        enemies[i][1] -= 1;
-      }
-      if (i % 2 === 1) {
-        enemies[i][0] -= 2;
-        enemies[i][1] += 2;
-        enemies[i][0] += 12;
-        enemies[i][1] -= 2;
-        enemies[i][0] += 15;
-        enemies[i][1] -= 1;
-        enemies[i][0] -= 10;
+        enemies[i][1] -= 1 + Math.floor(Math.random() * 5)
       }
     }
-    if (enemies[i][0] <= 10 || enemies[i][1] <= 10 || enemies[i][1] > 550) {
-      enemies[i][0] = 1300;
+
+
+    if (enemies[i][0] <= -50 || enemies[i][1] <= 0 || enemies[i][1] > 850) {
+      enemies[i][0] = 2300;
       enemies[i][1] = 450;
     }
   }
@@ -407,13 +399,13 @@ function drawBossMagic() {
     }
 }
 
-//If we're drawing bossmagic on the canvas, this moves them right on the canvas
+//If we're drawing bossmagic on the canvas, this moves them left on the canvas
 function moveBossMagic() {
   for (var i = 0; i < bossmagics.length; i++) {
-    if (bossmagics[i][0] > -10) {
+    if (bossmagics[i][0] > -500) {
       bossmagics[i][0] -= 8;
     }
-    if (bossmagics[i][0] <= 0) {
+    if (bossmagics[i][0] <= -500) {
       bossmagics.splice(i, 1);
     }
     if (bossroared === false) {
@@ -496,8 +488,8 @@ function hitTest() {
         if (
           !poweredUp &&
           magics[i][0] >= bossenemies[j][0] &&
-          magics[i][1] >= bossenemies[j][1] - (bossenemies[j][3]/2) &&
-          magics[i][1] <= bossenemies[j][1] + (bossenemies[j][3]/2)
+          magics[i][1] >= bossenemies[j][1] - (bossenemies[j][3] / 2) &&
+          magics[i][1] <= bossenemies[j][1] + (bossenemies[j][3] / 2)
         ) {
           hitSound.play();
           ctx.drawImage(
@@ -542,7 +534,7 @@ function hitTest() {
       }
     }
   }
-  
+
 
   //levelboss hit test
   if (bossroared === true && !bossenemies.length && score > 1000 && !victory) {
@@ -655,6 +647,7 @@ function gnomeCollision() {
           checkLives();
         }
       }
+      if (score >= 1300) { bossmagic_h = 135 } else { bossmagic_h = 45 }
       for (var i = 0; i < bossmagics.length; i++) {
         if (
           gnome_xw > bossmagics[i][0] &&
@@ -666,7 +659,7 @@ function gnomeCollision() {
         }
         if (
           gnome_xw < bossmagics[i][0] + bossmagic_w &&
-          gnome_xw > bossmagics[i][0] &&
+          gnome_xw > bossmagics[i][0] - 8 &&
           gnome_y > bossmagics[i][1] &&
           gnome_y < bossmagics[i][1] + bossmagic_h
         ) {
@@ -729,7 +722,7 @@ function gnomeCollision() {
         checkLives();
       }
     }
-    if(score < 1000){
+    if (score < 1000) {
 
       for (var i = 0; i < stalagtites.length; i++) {
         if (
@@ -737,39 +730,39 @@ function gnomeCollision() {
           gnome_x < stalagtites[i][0] + stalagtite_w &&
           gnome_y < stalagtites[i][1] &&
           gnome_y < stalagtites[i][1] + stalagtite_h
-          ) {
-            ramSound.play();
-            checkLives();
-          }
-          if (
-            gnome_xw < stalagtites[i][0] + stalagtite_w &&
-            gnome_xw > stalagtites[i][0] &&
-            gnome_y < stalagtites[i][1] &&
-            gnome_y < stalagtites[i][1] + stalagtite_h
-            ) {
-              ramSound.play();
-              checkLives();
-            }
-            if (
-              gnome_y < stalagtites[i][1] + stalagtite_h &&
-              gnome_x > stalagtites[i][0] &&
-              gnome_x < stalagtites[i][0] + stalagtite_w
-              ) {
-                ramSound.play();
-                checkLives();
-              }
-              if (
-                gnome_y < stalagtites[i][1] + stalagtite_h &&
-                gnome_xw < stalagtites[i][0] + stalagtite_w &&
-                gnome_xw > stalagtites[i][0]
-                ) {
-                  ramSound.play();
-                  checkLives();
-                }
-              }
-            }
-              for (var i = 0; i < powerups.length; i++) {
-                if (poweredUp) {
+        ) {
+          ramSound.play();
+          checkLives();
+        }
+        if (
+          gnome_xw < stalagtites[i][0] + stalagtite_w &&
+          gnome_xw > stalagtites[i][0] &&
+          gnome_y < stalagtites[i][1] &&
+          gnome_y < stalagtites[i][1] + stalagtite_h
+        ) {
+          ramSound.play();
+          checkLives();
+        }
+        if (
+          gnome_y < stalagtites[i][1] + stalagtite_h &&
+          gnome_x > stalagtites[i][0] &&
+          gnome_x < stalagtites[i][0] + stalagtite_w
+        ) {
+          ramSound.play();
+          checkLives();
+        }
+        if (
+          gnome_y < stalagtites[i][1] + stalagtite_h &&
+          gnome_xw < stalagtites[i][0] + stalagtite_w &&
+          gnome_xw > stalagtites[i][0]
+        ) {
+          ramSound.play();
+          checkLives();
+        }
+      }
+    }
+    for (var i = 0; i < powerups.length; i++) {
+      if (poweredUp) {
         powerups.splice(i, 1);
       } else {
         if (
@@ -1014,7 +1007,7 @@ function init() {
   canvas = document.getElementById("canvas");
   ctx = canvas.getContext("2d");
   enemy = new Image();
-  enemy.src = "./images/ghost2.gif";
+  enemy.src = "./images/ghost.gif";
   gnome = new Image();
   gnome.src = "./images/supergnome2.gif";
   cavemap = new Image();
@@ -1124,8 +1117,16 @@ function gameLoop() {
 
 //Checks to see which key has been pressed and either to move the gnome or fire a magic
 function keyDown(e) {
-  if (e.keyCode === 68) rightKey = true;
-  else if (e.keyCode === 65) {
+  let nope = false;
+  if (bossroared) { nope = false }
+  if (score >= 1000 && !bossroared) {
+    leftKey = true;
+    gnome.src = "./images/supergnomeidle3.gif";
+    nope = true;
+  }
+
+  if (e.keyCode === 68 && !nope) rightKey = true;
+  else if (e.keyCode === 65  && !nope) {
     leftKey = true;
     gnome.src = "./images/supergnomeidle3.gif";
   }

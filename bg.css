@@ -44,35 +44,35 @@ canvas {
   color: rgb(255, 0, 0);
 }
 .github-link{
-
-  height: 50px;
-  width: 50px;
+  height: 75px;
+  width: 75px;
   background-image: url('./images/github-gif.gif');
   background-repeat: no-repeat;
   background-size: contain;
   position: absolute;
-  bottom: 140px;
-  left: 50px;
+  bottom: 110px;
+  left: 30px;
 }
 
 .linkedin-link{
   display: flex;
   justify-content: flex-start;
   font-weight: 900;
-  height: 50px;
-  width: 60px;
+  height: 76px;
+  width: 94px;
   background-image: url('./images/linked-in.gif');
   background-repeat: no-repeat;
   background-size: contain;
   position: absolute;
-  bottom: 140px;
-  left: 132.2px;
+  bottom: 110px;
+  left: 155px;
 }
 .link-text{
+  font-size: 25px;
   font-weight: 900;
   position: absolute;
-  bottom: 178px;
-  left: 110px;
+  bottom: 165px;
+  left: 120px;
 }
 
 .story {
@@ -118,3 +118,6 @@ font-size: 50px;
 color: rgb(255, 0, 0);
 }
 
+.move-left{
+  margin-left: -20px;
+}
